@@ -8,15 +8,69 @@ using wf = System.Windows.Forms;
 using Autodesk.Navisworks.Api;
 using Autodesk.Navisworks.Api.Clash;
 using Autodesk.Navisworks.Api.Plugins;
+using Autodesk.Navisworks.Api.DocumentParts;
+using Application = Autodesk.Navisworks.Api.Application;
 
 namespace NavisResultViewer {
-    [PluginAttribute("ResultViewer", "Hyuni & Dotman", DisplayName = "ResultViewer", ToolTip = "halloween")]
-    public class MainClass : AddInPlugin {
+    [PluginAttribute("ResultViewer", "Hyuni & Dotman", DisplayName = "ResultViewer", ToolTip = "ver.halloween")]
+    public class MainClass : AddInPlugin{
 
-
+        public Document doc;
         public override int Execute(params string[] parameters) {
-            ShowMessage("ResultViewer Clicked");
+            // current document
+            doc = Application.ActiveDocument;
+
+            resultViewer rv = new resultViewer();
+            //rv.Show();
+
+            SelectObjects("3gJPWngHL7ffMDXJpyyN0T", "3gJPWngHL7ffMDXJpyyN07");
+
             return 0;
+        }
+
+        //부재에 칠할 색
+        Color[] colors = {Color.Green, Color.Red};
+
+        public void SelectObjects(string guid1, string guid2) {
+            doc.Models.ResetAllTemporaryMaterials();
+            ColorTarget(guid1, 0);
+            ColorTarget(guid2, 1);
+        }
+
+        /// <summary>
+        /// guid를 가진 오브젝트를 index에 맞는 색으로 칠하기
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="index"></param>
+        void ColorTarget(string guid, int index) {
+            if(!(index == 0 || index == 1)) {
+                ShowMessage($"Error : Wrong index({index})");
+                return;
+            }
+
+            SelectObjectWithGUID(guid);
+            doc.Models.OverrideTemporaryColor(doc.CurrentSelection.SelectedItems, colors[index]);
+            doc.CurrentSelection.Clear();
+        }
+
+        /// <summary>
+        /// guid를 이용해 오브젝트를 찾고 선택함
+        /// </summary>
+        /// <param name="guid"></param>
+        public void SelectObjectWithGUID(string guid) {
+            // 검색 객체 생성
+            Search search = new Search();
+            // 검색 범위 지정
+            search.Selection.SelectAll();
+            // 검색 조건 생성(요소-IfcGUID == guid)
+            SearchCondition condition = SearchCondition.HasPropertyByDisplayName("요소", "IfcGUID").EqualValue(new VariantData(guid));
+            // 검색 조건 적용
+            search.SearchConditions.Add(condition);
+            // collect model item (if found)
+            ModelItem item = search.FindFirst(doc, false);
+            if (item != null) {
+                doc.CurrentSelection.Add(item);
+            }
         }
 
         void ShowMessage(string content) {
