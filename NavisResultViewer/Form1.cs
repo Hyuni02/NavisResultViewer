@@ -1,0 +1,457 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Net.NetworkInformation;
+using Autodesk.Navisworks.Api;
+using Color = Autodesk.Navisworks.Api.Color;
+
+namespace ClashTest2
+{
+    public partial class Form1 : Form
+    {
+        // Struct which holds all the data
+        public struct Data
+        {
+            public string ClashType;
+            public string HardClashType;
+            public string SoftClashType;
+            public string Severity;
+            public string Element1discipline;
+            public string Element1GUID;
+            public string Element1Type;
+            public string Element2discipline;
+            public string Element2GUID;
+            public string Element2Type;
+            public string ClashDistance;
+            public string Clearance;
+            public string ClashPoint;
+            public string ClashVolume;
+            public string Topology;
+            public string Offset;
+        }
+        // List containing data structs
+        // 1 is hard type, 2 is soft type
+        // Can be used when handling the data itself
+        public List<Data> hardTypeList = new List<Data>();
+        public List<Data> softTypeList = new List<Data>();
+
+        // List containing ListViewItem
+        // Used when updating the Listview
+        public List<ListViewItem> itemType1 = new List<ListViewItem>();
+        public List<ListViewItem> itemType2 = new List<ListViewItem>();
+
+        // enum used for the header of columns in ListView
+        // When header is changed, change the enum
+        enum Header
+        {
+            ClashType = 0,
+            HardClashType = 1,
+            SoftClashType = 2,
+            Severity = 3,
+            Element1discipline = 4,
+            Element1GUID = 5,
+            Element1Type = 6,
+            Element2discipline = 7,
+            Element2GUID = 8,
+            Element2Type = 9,
+            ClashDistance = 10,
+            Clearance = 11,
+            ClashPoint = 12,
+            ClashVolume = 13,
+            Topology = 14,
+            Offset = 15,
+        }
+
+        private bool[] headerBool;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // return when the list is not empty
+            if (collapsibleListView1.Items.Count > 0)
+            {
+                return;
+            }
+
+            string path = "C:\\objectinfo\\ResultFile.csv";
+            StreamReader file = new StreamReader(path);
+            string firstLine = file.ReadLine();
+            string[] header = firstLine.Split(',');
+
+            SelectHeader selectHeader = new SelectHeader();
+            selectHeader.initializeHeaderBool(header.Length);
+            selectHeader.StartPosition = FormStartPosition.CenterParent;
+            selectHeader.ShowDialog();
+            if(selectHeader.isCanceled) return;
+
+            // 업데이트가 끝날때까지 UI 갱신 중지 -> 빠른 속도
+            collapsibleListView1.BeginUpdate();
+
+            checkBox1.Checked = true;
+            checkBox2.Checked = true;
+            checkBox1.Enabled = true;
+            checkBox2.Enabled = true;
+
+            // Add column header
+            foreach(string item in header)
+            {
+                collapsibleListView1.Columns.Add(item);
+            }
+            while (!file.EndOfStream)
+            {
+                string line = file.ReadLine();
+                string pattern = @",(?=(?:[^""]*""[^""]*"")*[^""]*$)";
+                string[] data = Regex.Split(line, pattern);
+
+                for (int i = 0; i < data.Length; i++)
+                {
+                    // Remove leading and trailing double quotes if present
+                    data[i] = data[i].Trim('"');
+                }
+
+                Data structData = new Data();
+                structData.ClashType = data[((int)Header.ClashType)];
+                structData.HardClashType = data[((int)Header.HardClashType)];
+                structData.SoftClashType = data[((int)Header.SoftClashType)];
+                structData.Severity = data[((int)Header.Severity)];
+                structData.Element1discipline = data[((int)Header.Element1discipline)];
+                structData.Element1GUID = data[((int)Header.Element1GUID)];
+                structData.Element1Type = data[((int)Header.Element1Type)];
+                structData.Element2discipline = data[((int)Header.Element2discipline)];
+                structData.Element2GUID = data[((int)Header.Element2GUID)];
+                structData.Element2Type = data[((int)Header.Element2Type)];
+                structData.ClashDistance = data[((int)Header.ClashDistance)];
+                structData.Clearance = data[((int)Header.Clearance)];
+                structData.ClashPoint = data[((int)Header.ClashPoint)];
+                structData.ClashVolume = data[((int)Header.ClashVolume)];
+                structData.Topology = data[((int)Header.Topology)];
+                structData.Offset = data[((int)Header.Offset)];
+
+                ListViewItem item2 = new ListViewItem(data[0]);
+                for (int i = 1; i< data.Length; i++)
+                {
+                    item2.SubItems.Add(data[i]);
+                }
+                if (structData.ClashType == "Hard")
+                {
+                    hardTypeList.Add(structData);
+                    itemType1.Add(item2);
+                }
+                else if (structData.ClashType == "Soft")
+                {
+                    softTypeList.Add(structData);
+                    itemType2.Add(item2);
+                }
+
+                collapsibleListView1.Items.Add(item2);
+
+                if (structData.Severity == "MAJOR")
+                {
+                    collapsibleListView1.Groups[0].Items.Add(item2);
+                    item2.Tag = "MAJOR";
+                }
+                else if (structData.Severity == "MEDIUM")
+                {
+                    collapsibleListView1.Groups[1].Items.Add(item2);
+                    item2.Tag = "MEDIUM";
+
+                }
+                else if (structData.Severity == "MINOR")
+                {
+                    collapsibleListView1.Groups[2].Items.Add(item2);
+                    item2.Tag = "MINOR";
+                }
+
+            }
+
+            // column 사이즈 재조정
+            changeColumnHeader(headerBool);
+            // 리스트뷰를 refresh해서 보여줌
+            collapsibleListView1.EndUpdate();
+        }
+
+        private async Task downloadFromServer()
+        {
+            string serverUrl = "http://117.17.196.92:6060/result"; // 서버 주소를 적절히 변경하세요
+            string downloadDir = "C:\\objectinfo\\"; // 다운로드할 디렉토리를 적절히 변경하세요
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                // GET 요청을 보내고 응답을 받습니다.
+                HttpResponseMessage response = await httpClient.GetAsync(serverUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // 응답으로 받은 파일을 저장합니다.
+                    using (Stream contentStream = await response.Content.ReadAsStreamAsync())
+                    {
+                        string filePath = Path.Combine(downloadDir, "ResultFile.csv");
+                        using (FileStream fileStream = File.Create(filePath))
+                        {
+                            await contentStream.CopyToAsync(fileStream);
+                        }
+                        Console.WriteLine($"파일 다운로드 완료: {filePath}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"요청 실패. 상태 코드: {response.StatusCode}");
+                }
+            }
+        }
+
+        private void collapsibleListView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (collapsibleListView1.SelectedIndices.Count > 0)
+            {
+                if (collapsibleListView1.SelectedItems[0].SubItems.Count > 1) {
+                    ID_GUID1.Text = "Guid1: " + collapsibleListView1.SelectedItems[0].SubItems[(int)Header.Element1GUID].Text + "  Guid2: " + collapsibleListView1.SelectedItems[0].SubItems[(int)Header.Element2GUID].Text;
+                    SelectObjects(collapsibleListView1.SelectedItems[0].SubItems[(int)Header.Element1GUID].Text, collapsibleListView1.SelectedItems[0].SubItems[(int)Header.Element2GUID].Text);
+                }
+
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBox1.Checked)
+            {
+               collapsibleListView1.BeginUpdate();
+               foreach (ListViewItem item in collapsibleListView1.Items)
+               {
+                    item.Remove();
+               }
+               if (checkBox2.Checked)
+               {
+                    foreach (ListViewItem item in itemType2)
+                    {
+                        collapsibleListView1.Items.Add(item);
+                        if (item.Tag.ToString() == "MAJOR")
+                        {
+                            collapsibleListView1.Groups[0].Items.Add(item);
+                        }
+                        else if (item.Tag.ToString() == "MEDIUM")
+                        {
+                            collapsibleListView1.Groups[1].Items.Add(item);
+
+                        }
+                        else if (item.Tag.ToString() == "MINOR")
+                        {
+                            collapsibleListView1.Groups[2].Items.Add(item);
+
+                        }
+                    }
+                }
+              
+               foreach(ListViewGroup group in collapsibleListView1.Groups)
+               {
+                    if(group.Items.Count == 0)
+                    {
+                        ListViewItem emptyItem = new ListViewItem(string.Empty);
+                        collapsibleListView1.Items.Add(emptyItem);
+                        group.Items.Add(emptyItem);
+                    }
+               }
+                collapsibleListView1.EndUpdate();
+            }
+            else if (checkBox1.Checked)
+            {
+                collapsibleListView1.BeginUpdate();
+                foreach (ListViewItem item in collapsibleListView1.Items)
+                {
+                    if(item.SubItems.Count <= 1)
+                    {
+                        item.Remove();
+                    }
+                }
+                foreach (ListViewItem item in itemType1)
+                {
+                    collapsibleListView1.Items.Add(item);
+                    if (item.Tag.ToString() == "MAJOR")
+                    {
+                        collapsibleListView1.Groups[0].Items.Add(item);
+                    }
+                    else if (item.Tag.ToString() == "MEDIUM")
+                    {
+                        collapsibleListView1.Groups[1].Items.Add(item);
+
+                    }
+                    else if (item.Tag.ToString() == "MINOR")
+                    {
+                        collapsibleListView1.Groups[2].Items.Add(item);
+
+                    }
+                }
+                collapsibleListView1.EndUpdate();
+            }
+
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBox2.Checked)
+            {
+                collapsibleListView1.BeginUpdate();
+                foreach (ListViewItem item in collapsibleListView1.Items)
+                {
+                    item.Remove();
+                }
+                if(checkBox1.Checked)
+                {
+                    foreach (ListViewItem item in itemType1)
+                    {
+                        collapsibleListView1.Items.Add(item);
+                        if (item.Tag.ToString() == "MAJOR")
+                        {
+                            collapsibleListView1.Groups[0].Items.Add(item);
+                        }
+                        else if (item.Tag.ToString() == "MEDIUM")
+                        {
+                            collapsibleListView1.Groups[1].Items.Add(item);
+
+                        }
+                        else if (item.Tag.ToString() == "MINOR")
+                        {
+                            collapsibleListView1.Groups[2].Items.Add(item);
+
+                        }
+                    }
+                }
+                
+                foreach (ListViewGroup group in collapsibleListView1.Groups)
+                {
+                    if (group.Items.Count == 0)
+                    {
+                        ListViewItem emptyItem = new ListViewItem(string.Empty);
+                        collapsibleListView1.Items.Add(emptyItem);
+                        group.Items.Add(emptyItem);
+                    }
+                }
+                collapsibleListView1.EndUpdate();
+            }
+            else if (checkBox2.Checked)
+            {
+                collapsibleListView1.BeginUpdate();
+                foreach (ListViewItem item in collapsibleListView1.Items)
+                {
+                    if (item.SubItems.Count <= 1)
+                    {
+                        item.Remove();
+                    }
+                }
+                foreach (ListViewItem item in itemType2)
+                {
+                    collapsibleListView1.Items.Add(item);
+                    if (item.Tag.ToString() == "MAJOR")
+                    {
+                        collapsibleListView1.Groups[0].Items.Add(item);
+                    }
+                    else if (item.Tag.ToString() == "MEDIUM")
+                    {
+                        collapsibleListView1.Groups[1].Items.Add(item);
+
+                    }
+                    else if (item.Tag.ToString() == "MINOR")
+                    {
+                        collapsibleListView1.Groups[2].Items.Add(item);
+
+                    }
+                }
+                collapsibleListView1.EndUpdate();
+            }
+        }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            await downloadFromServer();
+        }
+
+        public void changeColumnHeader(bool[] changedHeaders)
+        {
+            headerBool = changedHeaders;
+            if (collapsibleListView1.Columns.Count > 0)
+            {
+                for (int i = 0; i < headerBool.Length; i++)
+                {
+                    if (headerBool[i] == true)
+                    {
+                        collapsibleListView1.Columns[i].AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
+                    }
+                    else
+                    {
+                        collapsibleListView1.Columns[i].Width = 0;
+                    }
+                }
+            }
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            SelectHeader selectHeader = new SelectHeader();
+            selectHeader.getHeaderBool(headerBool, headerBool.Length);
+            selectHeader.StartPosition = FormStartPosition.CenterParent;
+            selectHeader.ShowDialog();
+        }
+
+
+        public Document doc;
+        //부재에 칠할 색
+        Color[] colors = { Color.Green, Color.Red };
+
+        public void SelectObjects(string guid1, string guid2) {
+            doc = Autodesk.Navisworks.Api.Application.ActiveDocument;
+            doc.Models.ResetAllTemporaryMaterials();
+            ColorTarget(guid1, 0);
+            ColorTarget(guid2, 1);
+        }
+
+        /// <summary>
+        /// guid를 가진 오브젝트를 index에 맞는 색으로 칠하기
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="index"></param>
+        void ColorTarget(string guid, int index) {
+            if (!(index == 0 || index == 1)) {
+                //ShowMessage($"Error : Wrong index({index})");
+                return;
+            }
+
+            SelectObjectWithGUID(guid);
+            doc.Models.OverrideTemporaryColor(doc.CurrentSelection.SelectedItems, colors[index]);
+            doc.CurrentSelection.Clear();
+        }
+
+        /// <summary>
+        /// guid를 이용해 오브젝트를 찾고 선택함
+        /// </summary>
+        /// <param name="guid"></param>
+        public void SelectObjectWithGUID(string guid) {
+            // 검색 객체 생성
+            Search search = new Search();
+            // 검색 범위 지정
+            search.Selection.SelectAll();
+            // 검색 조건 생성(요소-IfcGUID == guid)
+            SearchCondition condition = SearchCondition.HasPropertyByDisplayName("요소", "IfcGUID").EqualValue(new VariantData(guid));
+            // 검색 조건 적용
+            search.SearchConditions.Add(condition);
+            // collect model item (if found)
+            ModelItem item = search.FindFirst(doc, false);
+            if (item != null) {
+                doc.CurrentSelection.Add(item);
+            }
+        }
+    }
+}

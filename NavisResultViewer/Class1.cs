@@ -10,28 +10,30 @@ using Autodesk.Navisworks.Api.Clash;
 using Autodesk.Navisworks.Api.Plugins;
 using Autodesk.Navisworks.Api.DocumentParts;
 using Application = Autodesk.Navisworks.Api.Application;
+using ClashTest2;
 
 namespace NavisResultViewer {
     [PluginAttribute("ResultViewer", "Hyuni & Dotman", DisplayName = "ResultViewer", ToolTip = "ver.halloween")]
     public class MainClass : AddInPlugin{
 
-        public Document doc;
+        
         public override int Execute(params string[] parameters) {
             // current document
-            doc = Application.ActiveDocument;
+           
 
-            resultViewer rv = new resultViewer();
-            //rv.Show();
+            Form1 rv = new Form1();
+            rv.Show();
 
-            SelectObjects("3gJPWngHL7ffMDXJpyyN0T", "3gJPWngHL7ffMDXJpyyN07");
+            //SelectObjects("3gJPWngHL7ffMDXJpyyN0T", "3gJPWngHL7ffMDXJpyyN07");
 
             return 0;
         }
-
+        public Document doc;
         //부재에 칠할 색
         Color[] colors = {Color.Green, Color.Red};
 
         public void SelectObjects(string guid1, string guid2) {
+            doc = Application.ActiveDocument;
             doc.Models.ResetAllTemporaryMaterials();
             ColorTarget(guid1, 0);
             ColorTarget(guid2, 1);
