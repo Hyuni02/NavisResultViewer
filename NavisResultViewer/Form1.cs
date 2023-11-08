@@ -76,6 +76,7 @@ namespace ClashTest2
         public Form1()
         {
             InitializeComponent();
+            doc = Autodesk.Navisworks.Api.Application.ActiveDocument;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -227,6 +228,7 @@ namespace ClashTest2
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
+            // hard type unchecked
             if (!checkBox1.Checked)
             {
                collapsibleListView1.BeginUpdate();
@@ -234,6 +236,7 @@ namespace ClashTest2
                {
                     item.Remove();
                }
+               // only soft type checked
                if (checkBox2.Checked)
                {
                     foreach (ListViewItem item in itemType2)
@@ -254,9 +257,14 @@ namespace ClashTest2
 
                         }
                     }
+                    collapsibleListView1.Columns[(int)Header.HardClashType].Width = 0;
+                    collapsibleListView1.Columns[(int)Header.ClashDistance].Width = 0;
+                    collapsibleListView1.Columns[(int)Header.ClashPoint].Width = 0;
+                    collapsibleListView1.Columns[(int)Header.ClashVolume].Width = 0;
+
                 }
-              
-               foreach(ListViewGroup group in collapsibleListView1.Groups)
+
+                foreach (ListViewGroup group in collapsibleListView1.Groups)
                {
                     if(group.Items.Count == 0)
                     {
@@ -267,8 +275,13 @@ namespace ClashTest2
                }
                 collapsibleListView1.EndUpdate();
             }
+            // hard type checked
             else if (checkBox1.Checked)
             {
+                if(collapsibleListView1.Items.Count == 0)
+                {
+                    return;
+                }
                 collapsibleListView1.BeginUpdate();
                 foreach (ListViewItem item in collapsibleListView1.Items)
                 {
@@ -295,6 +308,9 @@ namespace ClashTest2
 
                     }
                 }
+                changeColumnHeader(headerBool);
+                collapsibleListView1.Columns[(int)Header.SoftClashType].Width = 0;
+                collapsibleListView1.Columns[(int)Header.Clearance].Width = 0;
                 collapsibleListView1.EndUpdate();
             }
 
@@ -302,13 +318,16 @@ namespace ClashTest2
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
+            // soft type unchecked
             if (!checkBox2.Checked)
             {
                 collapsibleListView1.BeginUpdate();
+                // Remove both soft/hard
                 foreach (ListViewItem item in collapsibleListView1.Items)
                 {
                     item.Remove();
                 }
+                // Only hard checked
                 if(checkBox1.Checked)
                 {
                     foreach (ListViewItem item in itemType1)
@@ -329,6 +348,8 @@ namespace ClashTest2
 
                         }
                     }
+                   collapsibleListView1.Columns[(int)Header.SoftClashType].Width = 0;
+                   collapsibleListView1.Columns[(int)Header.Clearance].Width = 0;
                 }
                 
                 foreach (ListViewGroup group in collapsibleListView1.Groups)
@@ -342,9 +363,15 @@ namespace ClashTest2
                 }
                 collapsibleListView1.EndUpdate();
             }
+            // soft type checked
             else if (checkBox2.Checked)
             {
+                if (collapsibleListView1.Items.Count == 0)
+                {
+                    return;
+                }
                 collapsibleListView1.BeginUpdate();
+                //only soft type checked
                 foreach (ListViewItem item in collapsibleListView1.Items)
                 {
                     if (item.SubItems.Count <= 1)
@@ -370,6 +397,11 @@ namespace ClashTest2
 
                     }
                 }
+                changeColumnHeader(headerBool);
+                collapsibleListView1.Columns[(int)Header.HardClashType].Width = 0;
+                collapsibleListView1.Columns[(int)Header.ClashDistance].Width = 0;
+                collapsibleListView1.Columns[(int)Header.ClashPoint].Width = 0;
+                collapsibleListView1.Columns[(int)Header.ClashVolume].Width = 0;
                 collapsibleListView1.EndUpdate();
             }
         }
@@ -406,14 +438,38 @@ namespace ClashTest2
             selectHeader.ShowDialog();
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (collapsibleListView1.SelectedIndices.Count > 0)
+            {
+                if (collapsibleListView1.SelectedItems[0].SubItems.Count > 1)
+                {
+                    //MessageBoxEx.Show(this, collapsibleListView1.SelectedItems[0].SubItems[(int)Header.Element1GUID].Text);
+                    doc.CurrentSelection.Clear();
+                    SelectObjectWithGUID(collapsibleListView1.SelectedItems[0].SubItems[(int)Header.Element1GUID].Text);
+                }
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (collapsibleListView1.SelectedIndices.Count > 0)
+            {
+                if (collapsibleListView1.SelectedItems[0].SubItems.Count > 1) {
+                    //MessageBoxEx.Show(this, collapsibleListView1.SelectedItems[0].SubItems[(int)Header.Element2GUID].Text);
+                    doc.CurrentSelection.Clear();
+                    SelectObjectWithGUID(collapsibleListView1.SelectedItems[0].SubItems[(int)Header.Element2GUID].Text);
+                }
+            }
+        }
 
         public Document doc;
         //부재에 칠할 색
         Color[] colors = { Color.Green, Color.Red };
-
+        bool trans = false;
         public void SelectObjects(string guid1, string guid2) {
-            doc = Autodesk.Navisworks.Api.Application.ActiveDocument;
             doc.Models.ResetAllTemporaryMaterials();
+            ColorTarget("all");
             ColorTarget(guid1, 0);
             ColorTarget(guid2, 1);
         }
@@ -423,15 +479,18 @@ namespace ClashTest2
         /// </summary>
         /// <param name="guid"></param>
         /// <param name="index"></param>
-        void ColorTarget(string guid, int index) {
-            if (!(index == 0 || index == 1)) {
-                //ShowMessage($"Error : Wrong index({index})");
-                return;
+        void ColorTarget(string guid, int index = -1) {
+            if (index == -1) {
+                doc.CurrentSelection.SelectAll();
+                doc.Models.OverrideTemporaryTransparency(doc.CurrentSelection.SelectedItems, trans ? 20 : 0);
+                doc.CurrentSelection.Clear();
             }
-
-            SelectObjectWithGUID(guid);
-            doc.Models.OverrideTemporaryColor(doc.CurrentSelection.SelectedItems, colors[index]);
-            doc.CurrentSelection.Clear();
+            else {
+                SelectObjectWithGUID(guid);
+                doc.Models.OverrideTemporaryColor(doc.CurrentSelection.SelectedItems, colors[index]);
+                doc.Models.OverrideTemporaryTransparency(doc.CurrentSelection.SelectedItems, 0);
+                doc.CurrentSelection.Clear();
+            }
         }
 
         /// <summary>
@@ -452,6 +511,10 @@ namespace ClashTest2
             if (item != null) {
                 doc.CurrentSelection.Add(item);
             }
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e) {
+            trans = checkBox3.Checked;
         }
     }
 }

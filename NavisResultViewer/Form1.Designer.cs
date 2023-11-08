@@ -28,17 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("MAJOR", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("MEDIUM", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("MINOR", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("MAJOR", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("MEDIUM", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("MINOR", System.Windows.Forms.HorizontalAlignment.Left);
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.ID_GUID1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.Download = new System.Windows.Forms.Button();
-            this.collapsibleListView1 = new ListviewTest.CollapsibleListView();
             this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.collapsibleListView1 = new ListviewTest.CollapsibleListView();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // button1
@@ -64,7 +67,7 @@
             // 
             this.ID_GUID1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ID_GUID1.AutoSize = true;
-            this.ID_GUID1.Location = new System.Drawing.Point(12, 398);
+            this.ID_GUID1.Location = new System.Drawing.Point(12, 414);
             this.ID_GUID1.Name = "ID_GUID1";
             this.ID_GUID1.Size = new System.Drawing.Size(257, 12);
             this.ID_GUID1.TabIndex = 4;
@@ -109,6 +112,37 @@
             this.Download.UseVisualStyleBackColor = true;
             this.Download.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button2
+            // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Location = new System.Drawing.Point(677, 98);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(94, 23);
+            this.button2.TabIndex = 9;
+            this.button2.Text = "Select header";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(12, 390);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 10;
+            this.button3.Text = "Item1";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(93, 390);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 11;
+            this.button4.Text = "Item2";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // collapsibleListView1
             // 
             this.collapsibleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -116,16 +150,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.collapsibleListView1.FullRowSelect = true;
             this.collapsibleListView1.GridLines = true;
-            listViewGroup1.Header = "MAJOR";
-            listViewGroup1.Name = "listViewGroup1";
-            listViewGroup2.Header = "MEDIUM";
-            listViewGroup2.Name = "listViewGroup2";
-            listViewGroup3.Header = "MINOR";
-            listViewGroup3.Name = "listViewGroup3";
+            listViewGroup4.Header = "MAJOR";
+            listViewGroup4.Name = "listViewGroup1";
+            listViewGroup5.Header = "MEDIUM";
+            listViewGroup5.Name = "listViewGroup2";
+            listViewGroup6.Header = "MINOR";
+            listViewGroup6.Name = "listViewGroup3";
             this.collapsibleListView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3});
+            listViewGroup4,
+            listViewGroup5,
+            listViewGroup6});
             this.collapsibleListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.collapsibleListView1.HideSelection = false;
             this.collapsibleListView1.Location = new System.Drawing.Point(12, 12);
@@ -136,21 +170,25 @@
             this.collapsibleListView1.View = System.Windows.Forms.View.Details;
             this.collapsibleListView1.SelectedIndexChanged += new System.EventHandler(this.collapsibleListView1_SelectedIndexChanged);
             // 
-            // button2
+            // checkBox3
             // 
-            this.button2.Location = new System.Drawing.Point(677, 98);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(94, 23);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "Select header";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(677, 127);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(104, 16);
+            this.checkBox3.TabIndex = 12;
+            this.checkBox3.Text = "선택 외 투명화";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(783, 436);
+            this.Controls.Add(this.checkBox3);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.Download);
             this.Controls.Add(this.checkBox2);
@@ -175,6 +213,9 @@
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.Button Download;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.CheckBox checkBox3;
     }
 }
 
