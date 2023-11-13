@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("MAJOR", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("MEDIUM", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("MINOR", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("MAJOR", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("MEDIUM", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup9 = new System.Windows.Forms.ListViewGroup("MINOR", System.Windows.Forms.HorizontalAlignment.Left);
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.ID_GUID1 = new System.Windows.Forms.Label();
@@ -42,6 +42,12 @@
             this.button4 = new System.Windows.Forms.Button();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.collapsibleListView1 = new ListviewTest.CollapsibleListView();
+            this.majorHard = new System.Windows.Forms.Label();
+            this.majorSoft = new System.Windows.Forms.Label();
+            this.mediumHard = new System.Windows.Forms.Label();
+            this.mediumSoft = new System.Windows.Forms.Label();
+            this.minorHard = new System.Windows.Forms.Label();
+            this.minorSoft = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
@@ -164,16 +170,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.collapsibleListView1.FullRowSelect = true;
             this.collapsibleListView1.GridLines = true;
-            listViewGroup1.Header = "MAJOR";
-            listViewGroup1.Name = "listViewGroup1";
-            listViewGroup2.Header = "MEDIUM";
-            listViewGroup2.Name = "listViewGroup2";
-            listViewGroup3.Header = "MINOR";
-            listViewGroup3.Name = "listViewGroup3";
+            listViewGroup7.Header = "MAJOR";
+            listViewGroup7.Name = "listViewGroup1";
+            listViewGroup8.Header = "MEDIUM";
+            listViewGroup8.Name = "listViewGroup2";
+            listViewGroup9.Header = "MINOR";
+            listViewGroup9.Name = "listViewGroup3";
             this.collapsibleListView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3});
+            listViewGroup7,
+            listViewGroup8,
+            listViewGroup9});
             this.collapsibleListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.collapsibleListView1.HideSelection = false;
             this.collapsibleListView1.Location = new System.Drawing.Point(12, 12);
@@ -184,11 +190,77 @@
             this.collapsibleListView1.View = System.Windows.Forms.View.Details;
             this.collapsibleListView1.SelectedIndexChanged += new System.EventHandler(this.collapsibleListView1_SelectedIndexChanged);
             // 
+            // majorHard
+            // 
+            this.majorHard.AutoSize = true;
+            this.majorHard.Location = new System.Drawing.Point(675, 157);
+            this.majorHard.Name = "majorHard";
+            this.majorHard.Size = new System.Drawing.Size(89, 12);
+            this.majorHard.TabIndex = 13;
+            this.majorHard.Text = "MAJOR_HARD:";
+            this.majorHard.Visible = false;
+            // 
+            // majorSoft
+            // 
+            this.majorSoft.AutoSize = true;
+            this.majorSoft.Location = new System.Drawing.Point(675, 177);
+            this.majorSoft.Name = "majorSoft";
+            this.majorSoft.Size = new System.Drawing.Size(89, 12);
+            this.majorSoft.TabIndex = 14;
+            this.majorSoft.Text = "MAJOR_SOFT:\r\n";
+            this.majorSoft.Visible = false;
+            // 
+            // mediumHard
+            // 
+            this.mediumHard.AutoSize = true;
+            this.mediumHard.Location = new System.Drawing.Point(675, 197);
+            this.mediumHard.Name = "mediumHard";
+            this.mediumHard.Size = new System.Drawing.Size(96, 12);
+            this.mediumHard.TabIndex = 15;
+            this.mediumHard.Text = "MEDIUM_HARD:";
+            this.mediumHard.Visible = false;
+            // 
+            // mediumSoft
+            // 
+            this.mediumSoft.AutoSize = true;
+            this.mediumSoft.Location = new System.Drawing.Point(675, 217);
+            this.mediumSoft.Name = "mediumSoft";
+            this.mediumSoft.Size = new System.Drawing.Size(96, 12);
+            this.mediumSoft.TabIndex = 16;
+            this.mediumSoft.Text = "MEDIUM_SOFT:";
+            this.mediumSoft.Visible = false;
+            // 
+            // minorHard
+            // 
+            this.minorHard.AutoSize = true;
+            this.minorHard.Location = new System.Drawing.Point(675, 237);
+            this.minorHard.Name = "minorHard";
+            this.minorHard.Size = new System.Drawing.Size(87, 12);
+            this.minorHard.TabIndex = 17;
+            this.minorHard.Text = "MINOR_HARD:";
+            this.minorHard.Visible = false;
+            // 
+            // minorSoft
+            // 
+            this.minorSoft.AutoSize = true;
+            this.minorSoft.Location = new System.Drawing.Point(675, 257);
+            this.minorSoft.Name = "minorSoft";
+            this.minorSoft.Size = new System.Drawing.Size(87, 12);
+            this.minorSoft.TabIndex = 18;
+            this.minorSoft.Text = "MINOR_SOFT:";
+            this.minorSoft.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(783, 436);
+            this.Controls.Add(this.minorSoft);
+            this.Controls.Add(this.minorHard);
+            this.Controls.Add(this.mediumSoft);
+            this.Controls.Add(this.mediumHard);
+            this.Controls.Add(this.majorSoft);
+            this.Controls.Add(this.majorHard);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -201,7 +273,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Integrity Checker-MEP Response";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -219,6 +291,12 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.Label majorHard;
+        private System.Windows.Forms.Label majorSoft;
+        private System.Windows.Forms.Label mediumHard;
+        private System.Windows.Forms.Label mediumSoft;
+        private System.Windows.Forms.Label minorHard;
+        private System.Windows.Forms.Label minorSoft;
     }
 }
 

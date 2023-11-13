@@ -13,7 +13,7 @@ using Application = Autodesk.Navisworks.Api.Application;
 using ClashTest2;
 
 namespace NavisResultViewer {
-    [PluginAttribute("ResultViewer", "Hyuni & Dotman", DisplayName = "ResultViewer", ToolTip = "ver.halloween")]
+    [PluginAttribute("NavisResultViewer", "Hyuni & Dotman", DisplayName = "Integrity Checker-MEP Response", ToolTip = "ver.halloween")]
     public class MainClass : AddInPlugin{
 
         

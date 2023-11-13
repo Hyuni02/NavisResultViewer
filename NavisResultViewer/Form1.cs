@@ -73,6 +73,11 @@ namespace ClashTest2
         }
 
         private bool[] headerBool;
+
+        private int major_hard = 0, major_soft = 0;
+        private int medium_hard = 0, medium_soft = 0;
+        private int minor_hard = 0, minor_soft = 0;
+
         public Form1()
         {
             InitializeComponent();
@@ -161,17 +166,32 @@ namespace ClashTest2
 
                 if (structData.Severity == "MAJOR")
                 {
+                    if(structData.ClashType == "Hard") {
+                        major_hard++;
+                    }
+                    else { major_soft++; }
+
                     collapsibleListView1.Groups[0].Items.Add(item2);
                     item2.Tag = "MAJOR";
                 }
                 else if (structData.Severity == "MEDIUM")
                 {
+                    if(structData.ClashType == "Hard") {
+                        medium_hard++;
+                    }
+                    else { medium_soft++; }
+
                     collapsibleListView1.Groups[1].Items.Add(item2);
                     item2.Tag = "MEDIUM";
 
                 }
                 else if (structData.Severity == "MINOR")
                 {
+                    if (structData.ClashType == "Hard") {
+                        minor_hard++;
+                    }
+                    else { minor_soft++; }
+
                     collapsibleListView1.Groups[2].Items.Add(item2);
                     item2.Tag = "MINOR";
                 }
@@ -180,6 +200,13 @@ namespace ClashTest2
 
             // column 사이즈 재조정
             changeColumnHeader(headerBool);
+
+            // groupHeader 조정
+            showGroupNum();
+
+            // 오른쪽에 각 Severity_Clashtype 표시
+            showEachClashNuminfo();
+
             // 리스트뷰를 refresh해서 보여줌
             collapsibleListView1.EndUpdate();
         }
@@ -273,6 +300,7 @@ namespace ClashTest2
                         group.Items.Add(emptyItem);
                     }
                }
+                showGroupNum();
                 collapsibleListView1.EndUpdate();
             }
             // hard type checked
@@ -308,9 +336,19 @@ namespace ClashTest2
 
                     }
                 }
+                foreach (ListViewGroup group in collapsibleListView1.Groups) {
+                    if (group.Items.Count == 0) {
+                        ListViewItem emptyItem = new ListViewItem(string.Empty);
+                        collapsibleListView1.Items.Add(emptyItem);
+                        group.Items.Add(emptyItem);
+                    }
+                }
                 changeColumnHeader(headerBool);
-                collapsibleListView1.Columns[(int)Header.SoftClashType].Width = 0;
-                collapsibleListView1.Columns[(int)Header.Clearance].Width = 0;
+                if (!checkBox2.Checked) {
+                    collapsibleListView1.Columns[(int)Header.SoftClashType].Width = 0;
+                    collapsibleListView1.Columns[(int)Header.Clearance].Width = 0;
+                }
+                showGroupNum();
                 collapsibleListView1.EndUpdate();
             }
 
@@ -361,6 +399,7 @@ namespace ClashTest2
                         group.Items.Add(emptyItem);
                     }
                 }
+                showGroupNum();
                 collapsibleListView1.EndUpdate();
             }
             // soft type checked
@@ -397,11 +436,21 @@ namespace ClashTest2
 
                     }
                 }
+                foreach (ListViewGroup group in collapsibleListView1.Groups) {
+                    if (group.Items.Count == 0) {
+                        ListViewItem emptyItem = new ListViewItem(string.Empty);
+                        collapsibleListView1.Items.Add(emptyItem);
+                        group.Items.Add(emptyItem);
+                    }
+                }
                 changeColumnHeader(headerBool);
-                collapsibleListView1.Columns[(int)Header.HardClashType].Width = 0;
-                collapsibleListView1.Columns[(int)Header.ClashDistance].Width = 0;
-                collapsibleListView1.Columns[(int)Header.ClashPoint].Width = 0;
-                collapsibleListView1.Columns[(int)Header.ClashVolume].Width = 0;
+                if (!checkBox1.Checked) {
+                    collapsibleListView1.Columns[(int)Header.HardClashType].Width = 0;
+                    collapsibleListView1.Columns[(int)Header.ClashDistance].Width = 0;
+                    collapsibleListView1.Columns[(int)Header.ClashPoint].Width = 0;
+                    collapsibleListView1.Columns[(int)Header.ClashVolume].Width = 0;
+                }
+                showGroupNum();
                 collapsibleListView1.EndUpdate();
             }
         }
@@ -428,6 +477,51 @@ namespace ClashTest2
                     }
                 }
             }
+        }
+
+        private void showGroupNum() {
+            if (collapsibleListView1.Groups[0].Items.Count > 0) {
+                if (collapsibleListView1.Groups[0].Items[0].SubItems.Count > 1) {
+                    collapsibleListView1.Groups[0].Header = "MAJOR(" + collapsibleListView1.Groups[0].Items.Count.ToString() + ")";
+                }
+                else {
+                    collapsibleListView1.Groups[0].Header = "MAJOR(0)";
+                }
+            }
+            
+            if(collapsibleListView1.Groups[1].Items.Count > 0) {
+                if (collapsibleListView1.Groups[1].Items[0].SubItems.Count > 1) {
+                    collapsibleListView1.Groups[1].Header = "MEDIUM(" + collapsibleListView1.Groups[1].Items.Count.ToString() + ")";
+                }
+                else {
+                    collapsibleListView1.Groups[1].Header = "MEDIUM(0)";
+                }
+            }
+            if (collapsibleListView1.Groups[2].Items.Count > 0) {
+                if (collapsibleListView1.Groups[2].Items[0].SubItems.Count > 1) {
+                    collapsibleListView1.Groups[2].Header = "MINOR(" + collapsibleListView1.Groups[2].Items.Count.ToString() + ")";
+                }
+                else {
+                    collapsibleListView1.Groups[2].Header = "MINOR(0)";
+                }
+            }
+        }
+
+        private void showEachClashNuminfo() {
+            majorHard.Visible = true;
+            majorSoft.Visible = true;
+            mediumHard.Visible = true;
+            mediumSoft.Visible = true;
+            minorHard.Visible = true;
+            minorSoft.Visible = true;
+
+            majorHard.Text = "MAJOR_H:" + major_hard.ToString();
+            majorSoft.Text = "MAJOR_S:" + major_soft.ToString();
+            mediumHard.Text = "MEDIUM_H:" + medium_hard.ToString();
+            mediumSoft.Text = "MEDIUM_S:" + medium_soft.ToString();
+            minorHard.Text = "MINOR_H:" + minor_hard.ToString();
+            minorSoft.Text = "MINOR_S:" + minor_soft.ToString();
+            
         }
 
         private void button2_Click_1(object sender, EventArgs e)
