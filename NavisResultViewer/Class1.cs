@@ -19,12 +19,10 @@ namespace NavisResultViewer {
         
         public override int Execute(params string[] parameters) {
             // current document
-           
-
+    
             Form1 rv = new Form1();
             rv.Show();
 
-            //SelectObjects("3gJPWngHL7ffMDXJpyyN0T", "3gJPWngHL7ffMDXJpyyN07");
 
             return 0;
         }
