@@ -12,6 +12,7 @@ namespace ListviewTest
     {
         private const int LVGF_STATE = 0x00000004;
         private const int LVGS_COLLAPSIBLE = 0x00000008;
+        private const int LGVA_HEADER_LEFT = 0x00000001;
         private const int LVM_FIRST = 0x1000;
         private const int LVM_SETGROUPINFO = (LVM_FIRST + 147);
         private const int LVM_INSERTGROUP = (LVM_FIRST + 145);
@@ -84,6 +85,7 @@ namespace ListviewTest
             group.state = LVGS_COLLAPSIBLE;
             group.mask = LVGF_STATE;
             group.iGroupId = groupItemIndex;
+            group.uAlign = LGVA_HEADER_LEFT;
 
             IntPtr ip = IntPtr.Zero;
             try

@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("MAJOR", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("MEDIUM", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup9 = new System.Windows.Forms.ListViewGroup("MINOR", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("MAJOR", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("MEDIUM", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("MINOR", System.Windows.Forms.HorizontalAlignment.Left);
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.ID_GUID1 = new System.Windows.Forms.Label();
@@ -53,7 +53,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(677, 41);
+            this.button1.Location = new System.Drawing.Point(591, 41);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(94, 23);
             this.button1.TabIndex = 1;
@@ -73,7 +73,7 @@
             // 
             this.ID_GUID1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ID_GUID1.AutoSize = true;
-            this.ID_GUID1.Location = new System.Drawing.Point(12, 414);
+            this.ID_GUID1.Location = new System.Drawing.Point(12, 444);
             this.ID_GUID1.Name = "ID_GUID1";
             this.ID_GUID1.Size = new System.Drawing.Size(257, 12);
             this.ID_GUID1.TabIndex = 4;
@@ -84,7 +84,7 @@
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
             this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(677, 70);
+            this.checkBox1.Location = new System.Drawing.Point(591, 70);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(47, 22);
             this.checkBox1.TabIndex = 6;
@@ -98,7 +98,7 @@
             this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox2.Appearance = System.Windows.Forms.Appearance.Button;
             this.checkBox2.Enabled = false;
-            this.checkBox2.Location = new System.Drawing.Point(724, 70);
+            this.checkBox2.Location = new System.Drawing.Point(638, 70);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(47, 22);
             this.checkBox2.TabIndex = 7;
@@ -110,7 +110,7 @@
             // Download
             // 
             this.Download.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Download.Location = new System.Drawing.Point(677, 12);
+            this.Download.Location = new System.Drawing.Point(591, 12);
             this.Download.Name = "Download";
             this.Download.Size = new System.Drawing.Size(94, 23);
             this.Download.TabIndex = 8;
@@ -121,7 +121,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(677, 98);
+            this.button2.Location = new System.Drawing.Point(591, 98);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(94, 23);
             this.button2.TabIndex = 9;
@@ -132,7 +132,7 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button3.Location = new System.Drawing.Point(12, 390);
+            this.button3.Location = new System.Drawing.Point(12, 420);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 10;
@@ -143,7 +143,7 @@
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button4.Location = new System.Drawing.Point(93, 390);
+            this.button4.Location = new System.Drawing.Point(93, 420);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 11;
@@ -155,7 +155,7 @@
             // 
             this.checkBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(677, 127);
+            this.checkBox3.Location = new System.Drawing.Point(591, 127);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(104, 16);
             this.checkBox3.TabIndex = 12;
@@ -170,21 +170,21 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.collapsibleListView1.FullRowSelect = true;
             this.collapsibleListView1.GridLines = true;
-            listViewGroup7.Header = "MAJOR";
-            listViewGroup7.Name = "listViewGroup1";
-            listViewGroup8.Header = "MEDIUM";
-            listViewGroup8.Name = "listViewGroup2";
-            listViewGroup9.Header = "MINOR";
-            listViewGroup9.Name = "listViewGroup3";
+            listViewGroup1.Header = "MAJOR";
+            listViewGroup1.Name = "listViewGroup1";
+            listViewGroup2.Header = "MEDIUM";
+            listViewGroup2.Name = "listViewGroup2";
+            listViewGroup3.Header = "MINOR";
+            listViewGroup3.Name = "listViewGroup3";
             this.collapsibleListView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup7,
-            listViewGroup8,
-            listViewGroup9});
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3});
             this.collapsibleListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.collapsibleListView1.HideSelection = false;
             this.collapsibleListView1.Location = new System.Drawing.Point(12, 12);
             this.collapsibleListView1.Name = "collapsibleListView1";
-            this.collapsibleListView1.Size = new System.Drawing.Size(646, 372);
+            this.collapsibleListView1.Size = new System.Drawing.Size(560, 402);
             this.collapsibleListView1.TabIndex = 5;
             this.collapsibleListView1.UseCompatibleStateImageBehavior = false;
             this.collapsibleListView1.View = System.Windows.Forms.View.Details;
@@ -192,8 +192,9 @@
             // 
             // majorHard
             // 
+            this.majorHard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.majorHard.AutoSize = true;
-            this.majorHard.Location = new System.Drawing.Point(675, 157);
+            this.majorHard.Location = new System.Drawing.Point(589, 157);
             this.majorHard.Name = "majorHard";
             this.majorHard.Size = new System.Drawing.Size(89, 12);
             this.majorHard.TabIndex = 13;
@@ -202,8 +203,9 @@
             // 
             // majorSoft
             // 
+            this.majorSoft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.majorSoft.AutoSize = true;
-            this.majorSoft.Location = new System.Drawing.Point(675, 177);
+            this.majorSoft.Location = new System.Drawing.Point(589, 177);
             this.majorSoft.Name = "majorSoft";
             this.majorSoft.Size = new System.Drawing.Size(89, 12);
             this.majorSoft.TabIndex = 14;
@@ -212,8 +214,9 @@
             // 
             // mediumHard
             // 
+            this.mediumHard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.mediumHard.AutoSize = true;
-            this.mediumHard.Location = new System.Drawing.Point(675, 197);
+            this.mediumHard.Location = new System.Drawing.Point(589, 197);
             this.mediumHard.Name = "mediumHard";
             this.mediumHard.Size = new System.Drawing.Size(96, 12);
             this.mediumHard.TabIndex = 15;
@@ -222,8 +225,9 @@
             // 
             // mediumSoft
             // 
+            this.mediumSoft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.mediumSoft.AutoSize = true;
-            this.mediumSoft.Location = new System.Drawing.Point(675, 217);
+            this.mediumSoft.Location = new System.Drawing.Point(589, 217);
             this.mediumSoft.Name = "mediumSoft";
             this.mediumSoft.Size = new System.Drawing.Size(96, 12);
             this.mediumSoft.TabIndex = 16;
@@ -232,8 +236,9 @@
             // 
             // minorHard
             // 
+            this.minorHard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.minorHard.AutoSize = true;
-            this.minorHard.Location = new System.Drawing.Point(675, 237);
+            this.minorHard.Location = new System.Drawing.Point(589, 237);
             this.minorHard.Name = "minorHard";
             this.minorHard.Size = new System.Drawing.Size(87, 12);
             this.minorHard.TabIndex = 17;
@@ -242,8 +247,9 @@
             // 
             // minorSoft
             // 
+            this.minorSoft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.minorSoft.AutoSize = true;
-            this.minorSoft.Location = new System.Drawing.Point(675, 257);
+            this.minorSoft.Location = new System.Drawing.Point(589, 257);
             this.minorSoft.Name = "minorSoft";
             this.minorSoft.Size = new System.Drawing.Size(87, 12);
             this.minorSoft.TabIndex = 18;
@@ -254,7 +260,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(783, 436);
+            this.ClientSize = new System.Drawing.Size(697, 466);
             this.Controls.Add(this.minorSoft);
             this.Controls.Add(this.minorHard);
             this.Controls.Add(this.mediumSoft);
