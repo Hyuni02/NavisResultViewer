@@ -132,7 +132,7 @@ namespace ClashTest2
                 structData.ClashType = data[((int)Header.ClashType)];
                 structData.HardClashType = data[((int)Header.HardClashType)];
                 structData.SoftClashType = data[((int)Header.SoftClashType)];
-                structData.Severity = data[((int)Header.Severity)];
+                structData.Severity = data[((int)Header.Severity)].ToUpper();
                 structData.Element1discipline = data[((int)Header.Element1discipline)];
                 structData.Element1GUID = data[((int)Header.Element1GUID)];
                 structData.Element1Type = data[((int)Header.Element1Type)];

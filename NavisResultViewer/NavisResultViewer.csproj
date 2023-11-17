@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>D:\Navisworks\Navisworks Manage 2023\Plugins\NavisResultViewer\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\Program Files\Autodesk\Navisworks Manage 2023\Plugins\NavisResultViewer\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,11 +32,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autodesk.Navisworks.Api">
-      <HintPath>D:\Navisworks\Navisworks Manage 2023\Autodesk.Navisworks.Api.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Navisworks Manage 2023\Autodesk.Navisworks.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Autodesk.Navisworks.Clash">
-      <HintPath>D:\Navisworks\Navisworks Manage 2023\Autodesk.Navisworks.Clash.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Navisworks Manage 2023\Autodesk.Navisworks.Clash.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
