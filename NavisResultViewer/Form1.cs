@@ -14,6 +14,8 @@ using System.Windows.Forms;
 using System.Net.NetworkInformation;
 using Autodesk.Navisworks.Api;
 using Color = Autodesk.Navisworks.Api.Color;
+using NavisResultViewer;
+using System.Threading;
 
 namespace ClashTest2
 {
@@ -92,6 +94,9 @@ namespace ClashTest2
                 return;
             }
 
+            
+
+
             string path = "C:\\objectinfo\\ResultFile.csv";
             StreamReader file = new StreamReader(path);
             string firstLine = file.ReadLine();
@@ -103,112 +108,268 @@ namespace ClashTest2
             selectHeader.ShowDialog();
             if(selectHeader.isCanceled) return;
 
-            // 업데이트가 끝날때까지 UI 갱신 중지 -> 빠른 속도
-            collapsibleListView1.BeginUpdate();
-
-            checkBox1.Checked = true;
-            checkBox2.Checked = true;
-            checkBox1.Enabled = true;
-            checkBox2.Enabled = true;
-
-            // Add column header
-            foreach(string item in header)
+            //Btn Load Click Event
+            LoadingForm loadingForm = new LoadingForm();
+            loadingForm.StartPosition = FormStartPosition.CenterParent;
+            
+            /*
+            loadingForm.ShowDialog();
+            
+            Task.Run(() =>
             {
-                collapsibleListView1.Columns.Add(item);
-            }
-            while (!file.EndOfStream)
+                // 긴 작업을 여기서 실행
+                this.BeginInvoke(new Action(() =>
+                {
+                    //here you can access any control of form you want to access from cross thread! example
+                    // 업데이트가 끝날때까지 UI 갱신 중지 -> 빠른 속도
+                    collapsibleListView1.BeginUpdate();
+
+                    checkBox1.Checked = true;
+                    checkBox2.Checked = true;
+                    checkBox1.Enabled = true;
+                    checkBox2.Enabled = true;
+
+                    // Add column header
+                    foreach (string item in header)
+                    {
+                        collapsibleListView1.Columns.Add(item);
+                    }
+                    while (!file.EndOfStream)
+                    {
+                        string line = file.ReadLine();
+                        string pattern = @",(?=(?:[^""]*""[^""]*"")*[^""]*$)";
+                        string[] data = Regex.Split(line, pattern);
+
+                        for (int i = 0; i < data.Length; i++)
+                        {
+                            // Remove leading and trailing double quotes if present
+                            data[i] = data[i].Trim('"');
+                        }
+
+                        Data structData = new Data();
+                        structData.ClashType = data[((int)Header.ClashType)];
+                        structData.HardClashType = data[((int)Header.HardClashType)];
+                        structData.SoftClashType = data[((int)Header.SoftClashType)];
+                        structData.Severity = data[((int)Header.Severity)].ToUpper();
+                        structData.Element1discipline = data[((int)Header.Element1discipline)];
+                        structData.Element1GUID = data[((int)Header.Element1GUID)];
+                        structData.Element1Type = data[((int)Header.Element1Type)];
+                        structData.Element2discipline = data[((int)Header.Element2discipline)];
+                        structData.Element2GUID = data[((int)Header.Element2GUID)];
+                        structData.Element2Type = data[((int)Header.Element2Type)];
+                        structData.ClashDistance = data[((int)Header.ClashDistance)];
+                        structData.Clearance = data[((int)Header.Clearance)];
+                        structData.ClashPoint = data[((int)Header.ClashPoint)];
+                        structData.ClashVolume = data[((int)Header.ClashVolume)];
+                        structData.Topology = data[((int)Header.Topology)];
+                        structData.Offset = data[((int)Header.Offset)];
+
+                        ListViewItem item2 = new ListViewItem(data[0]);
+                        for (int i = 1; i < data.Length; i++)
+                        {
+                            item2.SubItems.Add(data[i]);
+                        }
+                        if (structData.ClashType == "Hard")
+                        {
+                            hardTypeList.Add(structData);
+                            itemType1.Add(item2);
+                        }
+                        else if (structData.ClashType == "Soft")
+                        {
+                            softTypeList.Add(structData);
+                            itemType2.Add(item2);
+                        }
+
+                        collapsibleListView1.Items.Add(item2);
+
+                        if (structData.Severity == "MAJOR")
+                        {
+                            if (structData.ClashType == "Hard")
+                            {
+                                major_hard++;
+                            }
+                            else { major_soft++; }
+
+                            collapsibleListView1.Groups[0].Items.Add(item2);
+                            item2.Tag = "MAJOR";
+                        }
+                        else if (structData.Severity == "MEDIUM")
+                        {
+                            if (structData.ClashType == "Hard")
+                            {
+                                medium_hard++;
+                            }
+                            else { medium_soft++; }
+
+                            collapsibleListView1.Groups[1].Items.Add(item2);
+                            item2.Tag = "MEDIUM";
+
+                        }
+                        else if (structData.Severity == "MINOR")
+                        {
+                            if (structData.ClashType == "Hard")
+                            {
+                                minor_hard++;
+                            }
+                            else { minor_soft++; }
+
+                            collapsibleListView1.Groups[2].Items.Add(item2);
+                            item2.Tag = "MINOR";
+                        }
+                    }
+
+                    // column 사이즈 재조정
+                    changeColumnHeader(headerBool);
+
+                    // groupHeader 조정
+                    showGroupNum();
+
+                    // 오른쪽에 각 Severity_Clashtype 표시
+                    showEachClashNuminfo();
+
+                    // 리스트뷰를 refresh해서 보여줌
+                    collapsibleListView1.EndUpdate();
+                    // 작업이 끝나면 로딩 화면을 닫음
+                    loadingForm.Invoke(new Action(() =>
+                    {
+                        loadingForm?.Close();
+                    }));
+                }));
+
+            });
+            
+            */
+
+            //loadingForm.Show();
+
+           
+           loadingForm.Shown += async (s, ee) =>
             {
-                string line = file.ReadLine();
-                string pattern = @",(?=(?:[^""]*""[^""]*"")*[^""]*$)";
-                string[] data = Regex.Split(line, pattern);
-
-                for (int i = 0; i < data.Length; i++)
+                await Task.Run(() =>
                 {
-                    // Remove leading and trailing double quotes if present
-                    data[i] = data[i].Trim('"');
-                }
+                    // DO YOUR STUFF HERE 
+                    // And if you want to access the form controls you can do it like this
+                    this.Invoke(new Action(() =>
+                    {
+                        //here you can access any control of form you want to access from cross thread! example
+                        // 업데이트가 끝날때까지 UI 갱신 중지 -> 빠른 속도
+                        collapsibleListView1.BeginUpdate();
 
-                Data structData = new Data();
-                structData.ClashType = data[((int)Header.ClashType)];
-                structData.HardClashType = data[((int)Header.HardClashType)];
-                structData.SoftClashType = data[((int)Header.SoftClashType)];
-                structData.Severity = data[((int)Header.Severity)].ToUpper();
-                structData.Element1discipline = data[((int)Header.Element1discipline)];
-                structData.Element1GUID = data[((int)Header.Element1GUID)];
-                structData.Element1Type = data[((int)Header.Element1Type)];
-                structData.Element2discipline = data[((int)Header.Element2discipline)];
-                structData.Element2GUID = data[((int)Header.Element2GUID)];
-                structData.Element2Type = data[((int)Header.Element2Type)];
-                structData.ClashDistance = data[((int)Header.ClashDistance)];
-                structData.Clearance = data[((int)Header.Clearance)];
-                structData.ClashPoint = data[((int)Header.ClashPoint)];
-                structData.ClashVolume = data[((int)Header.ClashVolume)];
-                structData.Topology = data[((int)Header.Topology)];
-                structData.Offset = data[((int)Header.Offset)];
+                        checkBox1.Checked = true;
+                        checkBox2.Checked = true;
+                        checkBox1.Enabled = true;
+                        checkBox2.Enabled = true;
 
-                ListViewItem item2 = new ListViewItem(data[0]);
-                for (int i = 1; i< data.Length; i++)
-                {
-                    item2.SubItems.Add(data[i]);
-                }
-                if (structData.ClashType == "Hard")
-                {
-                    hardTypeList.Add(structData);
-                    itemType1.Add(item2);
-                }
-                else if (structData.ClashType == "Soft")
-                {
-                    softTypeList.Add(structData);
-                    itemType2.Add(item2);
-                }
+                        // Add column header
+                        foreach (string item in header)
+                        {
+                            collapsibleListView1.Columns.Add(item);
+                        }
+                        while (!file.EndOfStream)
+                        {
+                            string line = file.ReadLine();
+                            string pattern = @",(?=(?:[^""]*""[^""]*"")*[^""]*$)";
+                            string[] data = Regex.Split(line, pattern);
 
-                collapsibleListView1.Items.Add(item2);
+                            for (int i = 0; i < data.Length; i++)
+                            {
+                                // Remove leading and trailing double quotes if present
+                                data[i] = data[i].Trim('"');
+                            }
 
-                if (structData.Severity == "MAJOR")
-                {
-                    if(structData.ClashType == "Hard") {
-                        major_hard++;
-                    }
-                    else { major_soft++; }
+                            Data structData = new Data();
+                            structData.ClashType = data[((int)Header.ClashType)];
+                            structData.HardClashType = data[((int)Header.HardClashType)];
+                            structData.SoftClashType = data[((int)Header.SoftClashType)];
+                            structData.Severity = data[((int)Header.Severity)].ToUpper();
+                            structData.Element1discipline = data[((int)Header.Element1discipline)];
+                            structData.Element1GUID = data[((int)Header.Element1GUID)];
+                            structData.Element1Type = data[((int)Header.Element1Type)];
+                            structData.Element2discipline = data[((int)Header.Element2discipline)];
+                            structData.Element2GUID = data[((int)Header.Element2GUID)];
+                            structData.Element2Type = data[((int)Header.Element2Type)];
+                            structData.ClashDistance = data[((int)Header.ClashDistance)];
+                            structData.Clearance = data[((int)Header.Clearance)];
+                            structData.ClashPoint = data[((int)Header.ClashPoint)];
+                            structData.ClashVolume = data[((int)Header.ClashVolume)];
+                            structData.Topology = data[((int)Header.Topology)];
+                            structData.Offset = data[((int)Header.Offset)];
 
-                    collapsibleListView1.Groups[0].Items.Add(item2);
-                    item2.Tag = "MAJOR";
-                }
-                else if (structData.Severity == "MEDIUM")
-                {
-                    if(structData.ClashType == "Hard") {
-                        medium_hard++;
-                    }
-                    else { medium_soft++; }
+                            ListViewItem item2 = new ListViewItem(data[0]);
+                            for (int i = 1; i < data.Length; i++)
+                            {
+                                item2.SubItems.Add(data[i]);
+                            }
+                            if (structData.ClashType == "Hard")
+                            {
+                                hardTypeList.Add(structData);
+                                itemType1.Add(item2);
+                            }
+                            else if (structData.ClashType == "Soft")
+                            {
+                                softTypeList.Add(structData);
+                                itemType2.Add(item2);
+                            }
 
-                    collapsibleListView1.Groups[1].Items.Add(item2);
-                    item2.Tag = "MEDIUM";
+                            collapsibleListView1.Items.Add(item2);
 
-                }
-                else if (structData.Severity == "MINOR")
-                {
-                    if (structData.ClashType == "Hard") {
-                        minor_hard++;
-                    }
-                    else { minor_soft++; }
+                            if (structData.Severity == "MAJOR")
+                            {
+                                if (structData.ClashType == "Hard")
+                                {
+                                    major_hard++;
+                                }
+                                else { major_soft++; }
 
-                    collapsibleListView1.Groups[2].Items.Add(item2);
-                    item2.Tag = "MINOR";
-                }
+                                collapsibleListView1.Groups[0].Items.Add(item2);
+                                item2.Tag = "MAJOR";
+                            }
+                            else if (structData.Severity == "MEDIUM")
+                            {
+                                if (structData.ClashType == "Hard")
+                                {
+                                    medium_hard++;
+                                }
+                                else { medium_soft++; }
 
-            }
+                                collapsibleListView1.Groups[1].Items.Add(item2);
+                                item2.Tag = "MEDIUM";
 
-            // column 사이즈 재조정
-            changeColumnHeader(headerBool);
+                            }
+                            else if (structData.Severity == "MINOR")
+                            {
+                                if (structData.ClashType == "Hard")
+                                {
+                                    minor_hard++;
+                                }
+                                else { minor_soft++; }
 
-            // groupHeader 조정
-            showGroupNum();
+                                collapsibleListView1.Groups[2].Items.Add(item2);
+                                item2.Tag = "MINOR";
+                            }
 
-            // 오른쪽에 각 Severity_Clashtype 표시
-            showEachClashNuminfo();
+                        }
 
-            // 리스트뷰를 refresh해서 보여줌
-            collapsibleListView1.EndUpdate();
+                        // column 사이즈 재조정
+                        changeColumnHeader(headerBool);
+
+                        // groupHeader 조정
+                        showGroupNum();
+
+                        // 오른쪽에 각 Severity_Clashtype 표시
+                        showEachClashNuminfo();
+
+                        // 리스트뷰를 refresh해서 보여줌
+                        collapsibleListView1.EndUpdate();
+                    }));
+
+                    //Made long running loop to imitate lengthy process
+
+                }).ConfigureAwait(true);
+                loadingForm.Close();
+            };
+            loadingForm.ShowDialog();
+            
         }
 
         private async Task downloadFromServer()
@@ -243,7 +404,7 @@ namespace ClashTest2
 
         private void collapsibleListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (collapsibleListView1.SelectedIndices.Count > 0)
+            if (collapsibleListView1.SelectedIndices.Count > 0 && collapsibleListView1.SelectedIndices.Count <= 1)
             {
                 if (collapsibleListView1.SelectedItems[0].SubItems.Count > 1) {
                     ID_GUID1.Text = "Guid1: " + collapsibleListView1.SelectedItems[0].SubItems[(int)Header.Element1GUID].Text + "  Guid2: " + collapsibleListView1.SelectedItems[0].SubItems[(int)Header.Element2GUID].Text;
@@ -263,7 +424,7 @@ namespace ClashTest2
                {
                     item.Remove();
                }
-               // only soft type checked
+               // All checked -> only soft type checked
                if (checkBox2.Checked)
                {
                     foreach (ListViewItem item in itemType2)
@@ -290,7 +451,7 @@ namespace ClashTest2
                     collapsibleListView1.Columns[(int)Header.ClashVolume].Width = 0;
 
                 }
-
+                
                 foreach (ListViewGroup group in collapsibleListView1.Groups)
                {
                     if(group.Items.Count == 0)
@@ -365,12 +526,13 @@ namespace ClashTest2
                 {
                     item.Remove();
                 }
-                // Only hard checked
+                // All checked -> only hard checked
                 if(checkBox1.Checked)
                 {
                     foreach (ListViewItem item in itemType1)
                     {
                         collapsibleListView1.Items.Add(item);
+                        
                         if (item.Tag.ToString() == "MAJOR")
                         {
                             collapsibleListView1.Groups[0].Items.Add(item);
@@ -383,8 +545,8 @@ namespace ClashTest2
                         else if (item.Tag.ToString() == "MINOR")
                         {
                             collapsibleListView1.Groups[2].Items.Add(item);
-
                         }
+                        
                     }
                    collapsibleListView1.Columns[(int)Header.SoftClashType].Width = 0;
                    collapsibleListView1.Columns[(int)Header.Clearance].Width = 0;
@@ -478,7 +640,7 @@ namespace ClashTest2
                 }
             }
         }
-
+        
         private void showGroupNum() {
             if (collapsibleListView1.Groups[0].Items.Count > 0) {
                 if (collapsibleListView1.Groups[0].Items[0].SubItems.Count > 1) {
